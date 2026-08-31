@@ -1,9 +1,9 @@
 // Firebase app initialization only.
 // Business logic (auth flows, Firestore queries, storage uploads) belongs in
 // auth.ts / firestore.ts / storage.ts / functions.ts — not here.
-import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
+//import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
@@ -12,4 +12,4 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-export const firebaseApp: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
+// export const firebaseApp: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);

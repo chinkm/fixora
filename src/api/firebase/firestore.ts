@@ -17,6 +17,8 @@
  * no aggregation. Just CRUD + subscription primitives.
  */
 
+import type { UserProfile, UserRole } from '../../types/user';
+
 import {
   type DocumentData,
   type QueryConstraint,
@@ -33,6 +35,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { firestore } from './firebase';
+
 
 /**
  * Fetches a single document by collection path + id.
@@ -51,13 +54,17 @@ export async function getDocument<T = DocumentData>(
  * Use `merge: true` to patch specific fields without clobbering the rest
  * of the document (maps to Firestore's `setDoc(..., { merge: true })`).
  */
-export async function setDocument<T extends Record<string, unknown>>(
+export async function setDocument<T>(
   collectionPath: string,
   docId: string,
   data: T,
   options: { merge?: boolean } = {},
 ): Promise<void> {
-  await setDoc(doc(firestore, collectionPath, docId), data, { merge: options.merge ?? false });
+  await setDoc(
+    doc(firestore, collectionPath, docId),
+    data as DocumentData,
+    { merge: options.merge ?? false }
+  );
 }
 
 /**
@@ -78,7 +85,7 @@ export async function addDocument<T extends Record<string, unknown>>(
  * want create-or-update semantics should use `setDocument` with
  * `merge: true` instead.
  */
-export async function updateDocument<T extends Record<string, unknown>>(
+export async function updateDocument<T>(
   collectionPath: string,
   docId: string,
   data: Partial<T>,
@@ -133,5 +140,26 @@ export function subscribeToCollection<T = DocumentData>(
 ): Unsubscribe {
   return onSnapshot(query(collection(firestore, collectionPath), ...constraints), (snapshot) => {
     callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as T));
+  });
+}
+
+/**
+ * Gets the role of a user from the Firestore users collection.
+ * Returns null if the user profile does not exist.
+ */
+export async function getUserRole(uid: string): Promise<UserRole | null> {
+  const profile = await getDocument<UserProfile>('users', uid);
+  return profile?.role ?? null;
+}
+
+/**
+ * Creates or overwrites a user's profile in the Firestore users collection.
+ */
+export async function createUserProfile(
+  profile: Omit<UserProfile, 'createdAt'>,
+): Promise<void> {
+  await setDocument<UserProfile>('users', profile.uid, {
+    ...profile,
+    createdAt: Date.now(),
   });
 }
