@@ -29,6 +29,7 @@ interface AuthContextValue {
   completeRoleSelection: (role: UserRole) => Promise<void>;
   /** Used after any out-of-band auth (phone/google) so Context picks up the new user + role. */
   refreshSession: () => Promise<void>;
+  
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
+  
   const signIn = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "service-marketplace-app",
+    "name": "FIXORA",
     "slug": "service-marketplace-app",
+    "scheme": "fixora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +11,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.chinkm.fixora",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -22,7 +25,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-web-browser"
-    ]
+      "expo-web-browser",
+      "@react-native-google-signin/google-signin"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "31a4ff52-8aef-4bd1-83e7-88fd4b107ba5"
+      }
+    }
   }
 }
